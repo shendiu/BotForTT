@@ -1,0 +1,13 @@
+.env
+__pycache__/
+*.pyc
+*.mp4
+*.webm
+cookies.txt
+.venv/
+__pycache__/
+*.pyc
+docker-compose.yml
+Dockerfile
+DEPLOY.md
+.DS_Store

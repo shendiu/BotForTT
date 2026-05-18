@@ -102,10 +102,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
                     chat_id=message.chat_id,
                     message_thread_id=getattr(message, "message_thread_id", None),
                     video=f,
-                    caption=(
-                        f"Відео отримано з {_platform_name(url)}. "
-                        "Для перегляду оновіть Ваші військово-облікові документи!"
-                    ),
+                    caption=_download_caption(url, message),
                     supports_streaming=True,
                     read_timeout=120,
                     write_timeout=120,
@@ -134,6 +131,32 @@ def _platform_name(url: str) -> str:
     if "youtube" in url or "youtu.be" in url:
         return "YouTube Shorts"
     return "video"
+
+
+def _sender_name(message: Message) -> str:
+    user = getattr(message, "from_user", None)
+    if user:
+        full_name = getattr(user, "full_name", None)
+        if full_name and full_name.strip():
+            return full_name.strip()
+
+        username = getattr(user, "username", None)
+        if username and username.strip():
+            return f"@{username.strip().lstrip('@')}"
+
+    sender_chat = getattr(message, "sender_chat", None)
+    title = getattr(sender_chat, "title", None)
+    if title and title.strip():
+        return title.strip()
+
+    return "невідомого відправника"
+
+
+def _download_caption(url: str, message: Message) -> str:
+    return (
+        f"Відео отримано від {_sender_name(message)} з {_platform_name(url)}. "
+        "Для перегляду оновіть Ваші військово-облікові документи!"
+    )
 
 
 def main() -> None:

@@ -1,3 +1,4 @@
 python-telegram-bot==21.6
 yt-dlp>=2024.11.4
+curl-cffi>=0.10,<0.14
 python-dotenv>=1.0

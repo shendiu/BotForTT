@@ -67,6 +67,23 @@ class CaptionTests(unittest.TestCase):
 
         self.assertEqual(self.bot._sender_name(message), "@quiet_user")
 
+    def test_instagram_shortcode(self):
+        url = "https://www.instagram.com/reel/DYnF5FOIp5s/?igsh=foo"
+        self.assertEqual(self.bot._instagram_shortcode(url), "DYnF5FOIp5s")
+
+    def test_extract_json_array(self):
+        html = '{"video_versions":[{"width":720,"url":"https://example.com/a.mp4"},{"width":480,"url":"https://example.com/b.mp4"}]}'
+        versions = self.bot._extract_json_array(html, "video_versions")
+        self.assertEqual(len(versions), 2)
+        self.assertEqual(versions[0]["width"], 720)
+
+    def test_instagram_error_without_curl_cffi(self):
+        text = self.bot._download_error_text(
+            "https://www.instagram.com/reel/abc",
+            "Для Instagram потрібен пакет curl-cffi",
+        )
+        self.assertIn("curl-cffi", text)
+
 
 if __name__ == "__main__":
     unittest.main()
